@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart</title>
+    <link rel="stylesheet" href="/sitestyles.css" />
+    <style>
+      #payform {
+        display: none;
+      }
+      .checkout {
+        margin: 10px;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+      }
+      .cart-items {
+        width: 100%;
+      }
+      .cart-item {
+        margin: 3px;
+        padding: 5px;
+        background-color: #8b8b8b1f;
+      }
+      .checkout button {
+        padding: 10px 30px;
+        font-size: 16px;
+        cursor: pointer;
+        outline: none;
+        border: none;
+        border-radius: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        font-weight: bolder;
+      }
+      .checkout button:hover {
+        background-color: white;
+      }
+      #fullprice {
+        margin-right: 20px;
+        color: rgb(0, 227, 0);
+      }
+      main {
+        padding: 10px;
+      }
+      .payBox {
+        width: 100%;
+      }
+      .pay {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+        /* border: 1px solid red; */
+      }
+      .pay button {
+        width: 300px;
+        outline: none;
+        border: none;
+        font-size: 16px;
+        background-color: rgba(255, 255, 255, 0.829);
+        color: black;
+        font-weight: bolder;
+        padding: 8px;
+        margin: 5px;
+        border-radius: 16px;
+      }
+      .pay button:hover {
+        cursor: pointer;
+        background-color: white;
+      }
+      .pay input {
+        width: 300px;
+        outline: none;
+        border: none;
+        font-size: 16px;
+        background-color: #8b8b8b1f;
+        color: white;
+        padding: 10px;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>Cart</h2>
+      <nav>
+        <a href="/home"
+          ><img alt="Home" src="/images/store-svgrepo-com.svg"
+        /></a>
+      </nav>
+    </header>
+    <main>
+      <div id="checkout" class="checkout">
+        <p>Cart Items</p>
+        <div class="cart-items" id="cartItems"></div>
+        <p id="fullprice"></p>
+        <button onclick="checkout()">Checkout</button>
+      </div>
+      <div id="payform" class="payBox">
+        <form action="/pay" method="post" class="pay">
+          <label for="userName">
+            UserName:
+            <br />
+            <input type="text" name="user-name" />
+          </label>
+          <label for="address">
+            Address:
+            <br />
+            <input type="text" name="address" />
+          </label>
+          <label for="email">
+            Email:
+            <br />
+            <input type="email" name="email" />
+          </label>
+          <label for="price">
+            Price:
+            <br />
+            <input id="priceView" type="text" name="price" readonly />
+          </label>
+          <input type="hidden" id="title" name="title" />
+          <br />
+          <button type="submit">Pay</button>
+        </form>
+      </div>
+    </main>
+    <script>
+      const cartItemsBox = document.getElementById("cartItems");
+      const checkoutCart = document.getElementById("checkout");
+      const payform = document.getElementById("payform");
+      const priceView = document.getElementById("priceView");
+      let itemList = "";
+      let priceCount = 0;
+
+      async function callCartItems() {
+        const response = await fetch("/cartItems");
+        const cartItems = await response.json();
+        return cartItems;
+      }
+
+      async function renderCart() {
+        let cartItemsList = await callCartItems();
+        cartItemsList.forEach((i) => {
+          if (i.status === "cart") {
+            const cartItems = document.createElement("div");
+            cartItems.classList.add("cart-item");
+            const name = document.createElement("p");
+            name.innerText = i.courseId.name;
+            itemList = itemList + i.courseId.name + " ";
+            cartItems.appendChild(name);
+
+            priceCount = priceCount + i.courseId.price;
+            const p = document.createElement("p");
+            p.innerText = "Price:" + i.courseId.price;
+            cartItems.appendChild(p);
+
+            cartItemsBox.appendChild(cartItems);
+          }
+        });
+        document.getElementById("fullprice").innerHTML = "Price: " + priceCount;
+      }
+      renderCart();
+
+      function checkout() {
+        priceView.value = priceCount;
+        checkoutCart.style.display = "none";
+        payform.style.display = "block";
+        document.getElementById("title").value = itemList;
+      }
+
+      //
+    </script>
+  </body>
+</html>

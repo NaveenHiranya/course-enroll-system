@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vnix-Edu</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/sitestyles.css" />
+  </head>
+
+  <body>
+    <header>
+      <h2>VnixEDU</h2>
+      <nav>
+        <a class="home-header-btn" href="/cart"
+          >cart<img alt="cart" src="/images/cart-plus-svgrepo-com.svg"
+        /></a>
+        <!-- <p><%=locals.email%></p> -->
+        <a class="home-header-btn" href="/teacher/login">Upload</a>
+      </nav>
+    </header>
+    <main>
+      <div class="home-courses-list" id="home-courses-list">
+        <!-- <div class="course-card">
+      </div> -->
+      </div>
+    </main>
+    <script>
+      const coursesList = document.getElementById("courses");
+      const cards = document.getElementById("home-courses-list");
+
+      //fetch home courses
+      async function callCourses() {
+        const response = await fetch("/callCourses");
+        const courses = await response.json();
+        return courses;
+      }
+
+      async function addCourseCards() {
+        const courses = await callCourses();
+        console.log(courses);
+        courses.forEach((i) => {
+          const cardDiv = document.createElement("div");
+          cardDiv.classList.add("course-card");
+
+          const cardImg = document.createElement("img");
+          cardImg.alt = "course img";
+          cardImg.src = `/uploads/${i.image}`;
+          cardDiv.appendChild(cardImg);
+
+          const name = document.createElement("h4");
+          name.innerText = i.name;
+          cardDiv.appendChild(name);
+
+          const description = document.createElement("p");
+          description.innerText = i.description;
+          cardDiv.appendChild(description);
+
+          const techerName = document.createElement("p");
+          techerName.innerText = i.teacherId.name;
+          cardDiv.appendChild(techerName);
+
+          const price = document.createElement("p");
+          price.innerText = i.price;
+          cardDiv.appendChild(price);
+
+          const enrollBtn = document.createElement("button");
+          enrollBtn.innerText = "Enroll";
+          enrollBtn.classList.add("button-style-green");
+          enrollBtn.onclick = function () {
+            enrollCourse(i._id);
+          };
+          cardDiv.appendChild(enrollBtn);
+          cards.appendChild(cardDiv);
+        });
+      }
+
+      addCourseCards();
+      //call course
+      function openCourse(id) {
+        window.location.href = `/course/${id}`;
+      }
+
+      function enrollCourse(id) {
+        window.location.href = `/enroll/${id}`;
+      }
+    </script>
+  </body>
+</html>

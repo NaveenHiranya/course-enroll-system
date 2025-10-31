@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TeacherLogin</title>
+    <link rel="stylesheet" href="/sitestyles.css" />
+    <style>
+      .lockedLogo {
+        height: 20vh;
+        width: 20vh;
+        margin: auto;
+        /* border: 1px solid red; */
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .lockedLogo img {
+        width: 15vh;
+        height: 15vh;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        margin: auto;
+        gap: 10px;
+        min-width: 500px;
+        align-items: center;
+      }
+      input {
+        /* max-width: 500px; */
+        font-size: 20px;
+        outline: none;
+        color: white;
+        background-color: #292929;
+        border: none;
+        margin: 4px;
+        padding: 8px 15px;
+        border-radius: 15px;
+        width: 400px;
+      }
+      form button {
+        margin: 4px;
+        padding: 8px 10px;
+        font-size: 15px;
+        width: 400px;
+        cursor: pointer;
+        color: white;
+        background-color: #3c3c3c;
+        border: none;
+        outline: none;
+        margin-top: 25px;
+        border-radius: 16px;
+      }
+      .TeacerDescription{
+        width: 400px;
+        outline: none;
+        background-color: #292929;
+        color: white;
+        font-size: 20px;
+        border: none;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2 id="state"><%=locals.state%></h2>
+      <nav>
+        <a href="/home"
+          ><img alt="Home" src="/images/store-svgrepo-com.svg"
+        /></a>
+      </nav>
+    </header>
+    <main>
+      <div class="lockedLogo">
+        <img alt="lock" src="/images/lock-unlocked-svgrepo-com.svg" />
+      </div>
+      <form action="/teacher/login" method="post" id="loginForm">
+        <label for="email">
+          Email:
+          <br />
+          <input
+            name="email"
+            type="email"
+            placeholder="Enter your login Email"
+            value="<%= locals.email %>"
+            required
+          />
+        </label>
+        <label for="password">
+          Password:
+          <br />
+          <input name="password" type="password" required />
+        </label>
+        <p><%=locals.error%></p>
+        <button type="submit">LogIn</button>
+      </form>
+      <form action="/teacher/sign" method="post" id="signForm">
+         We need about you...
+        <input type="email" name="email" hidden  value="<%= locals.email%>" />
+        <textarea class="TeacerDescription" name="description" placeholder="Describe about you"></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </main>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const signForm = document.getElementById('signForm');
+        const state = document.getElementById('state').innerText;
+        
+        if(state === "Login"){
+            signForm.style.display = 'none';
+        }else if(state === "Sign"){
+            loginForm.style.display = 'none';
+        }
+    </script>
+  </body>
+</html>

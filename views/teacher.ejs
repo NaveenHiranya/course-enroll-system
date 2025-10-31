@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CourseDashbord</title>
+    <link rel="stylesheet" href="/styles2.css" />
+    <link rel="stylesheet" href="/sitestyles.css" />
+    <style>
+      .createCourseForm{
+        background-color: #2c2c2c;
+        color: white;
+      }
+      #coursesList li{
+        list-style-type: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>Dashbord</h2>
+      <nav>
+        <a href="/home"
+          ><img alt="Home" src="/images/store-svgrepo-com.svg"
+        /></a>
+        <div class="teacher-account" id="teacher-account">
+          <div class="teacher-account-details" id="teacher-account-details">
+            <div id="teacherClose" style="margin-left: 200px">X</div>
+            <h3 id="userName"><%= locals.name%></h3>
+            <p><span id="userEmail"><%=locals.email%></span></p>
+            <p id="userId"><%=locals.id%></p>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="teacher-main">
+      <div class="courses-slidebar">
+        <h4>Courses List</h4>
+        <ul id="coursesList"></ul>
+      </div>
+      <div class="courses">
+        <button id="createCourse">Create course</button>
+        <div class="create-course-menu" id="createCourseMenu">
+          <form class="createCourseForm" action="/createCourse" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*">
+
+            <label for="CourseName">
+              CourseName:
+              <input
+                type="text"
+                name="courseName"
+                placeholder="Python for beginners"
+              />
+            </label>
+            <label for="CourseDescription">
+              CourseDescription:
+              <textarea name="CourseDescription"></textarea>
+            </label>
+            <label for="price">
+              Price:
+              <input type="text" name="price" />
+            </label>
+            <input
+              style="display: none"
+              name="id"
+              type="text"
+              value="<%= locals.id %>"
+              readonly
+            />
+              <button type="submit">Create</button>
+              <button id="courseCancel" type="button">cancel</button>
+          </form>
+        </div>
+        <div class="upload-video">
+          <button id="createvideo" onclick="renderCourses()">Upload Video</button>
+          <div class="upload-video-menu" id="uploadVideoMenu">
+            <form action="/uploadVideo" enctype="multipart/form-data" method="post">
+              <label for="selectCourse">
+                Select Course:<select name="courseId" id="courseIdList">
+                  <option value="None">None</option>
+                </select>
+              </label>
+              <label for="videoName">
+                Name:<input type="text" name="videoName" />
+              </label>
+              <label for="videDescription">
+                description:<textarea name="videoDescription"></textarea>
+              </label>
+              <input type="file" name="video" accept="video/*">
+              <button type="submit">Upload</button>
+              <button id="videouploadcancel" type="button">cancel</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="message-box" id="messageBox">
+      <p><%=locals.message%></p>
+    </div>
+    <script>
+      const teacherAccountDetails = document.getElementById(
+        "teacher-account-details"
+      );
+      const teacherAccount = document.getElementById("teacher-account");
+      const teacherClose = document.getElementById("teacherClose");
+      const createCourseMenu = document.getElementById("createCourseMenu");
+      const coursesList = document.getElementById("coursesList");
+      const courseIdList = document.getElementById("courseIdList");
+
+      teacherAccount.addEventListener("click", () => {
+        teacherAccountDetails.style.display = "block";
+      });
+      teacherClose.addEventListener("click", (e) => {
+        e.stopPropagation();
+        teacherAccountDetails.style.display = "none";
+      });
+
+      //create course
+      document.getElementById("createCourse").addEventListener("click", () => {
+        createCourseMenu.style.display = "block";
+      });
+      document.getElementById("courseCancel").addEventListener("click", () => {
+        createCourseMenu.style.display = "none";
+      });
+      document.getElementById("videouploadcancel").addEventListener("click", () => {
+        document.getElementById('uploadVideoMenu').style.display = "none";
+      });
+
+      //message handle
+      function callMessage() {
+        document.getElementById("messageBox").style.display = "flex";
+        setTimeout(() => {
+          document.getElementById("messageBox").style.display = "none";
+        }, 3000);
+      }
+      callMessage();
+
+      //fetch courses
+      async function loadCourses() {
+        const teacherId = document.getElementById("userId").innerText;
+        try {
+          const response = await fetch("/courses", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ teacherId }),
+          });
+          const courses = await response.json();
+          return courses;
+        } catch (err) {
+          console.log("error", err);
+        }
+      }
+
+      //List to page
+      async function ListCourses() {
+        const courses = await loadCourses();
+        courses.forEach((i) => {
+          let li = document.createElement("li");
+          li.innerText = i.name;
+          li.classList.add('boxListDesign');
+          coursesList.appendChild(li);
+        });
+
+        console.log(courses);
+      }
+      ListCourses();
+
+      //give course list to upload video
+
+      async function renderCourses() {
+        document.getElementById('uploadVideoMenu').style.display = 'flex'
+        const courses = await loadCourses();
+        courses.forEach((i) => {
+          let option = document.createElement("option");
+          option.innerText = i.name;
+          option.value = i._id
+          courseIdList.appendChild(option);
+        });
+      }
+    </script>
+  </body>
+</html>

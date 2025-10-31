@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/sitestyles.css" />
+    <style>
+      main {
+        /* height: 100vh; */
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      .tabs {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+        min-width: 350px;
+        /* border: 1px solid red; */
+      }
+
+      .tabs button {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        background: #353535;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .tabs button.active {
+        background: #585858;
+        color: white;
+      }
+      form {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        /* border: 2px solid red; */
+        min-width: 300px;
+      }
+
+      form.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        position: relative;
+      }
+
+      label {
+        font-size: 14px;
+        color: #ffffff;
+      }
+
+      input {
+        padding: 10px;
+        border: 1px solid #212121;
+        background-color: #292929;
+        color: white;
+        border-radius: 6px;
+        font-size: 14px;
+        outline: none;
+      }
+
+      button.submit-btn {
+        padding: 12px;
+        border: none;
+        background: #414141;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button.submit-btn:hover {
+        background: #4b4b4b;
+      }
+
+      #passwordValid {
+        margin: 3px;
+        font-size: 15px;
+      }
+
+      #passwordValid {
+        list-style-type: none;
+        margin: 0;
+        color: red;
+      }
+      footer {
+        background-color: black;
+        color: white;
+        padding: 50px;
+        text-align: center;
+        border-top: 3px solid white;
+      }
+      @media (min-width: 800px) {
+        main {
+          justify-content: space-between;
+        }
+        .login-qutes {
+          display: flex;
+        }
+      }
+      .lockedLogo {
+        height: 20vh;
+        width: 20vh;
+        margin: auto;
+        /* border: 1px solid red; */
+        /* border: 1px solid blue; */
+      }
+      .lockedLogo img {
+        width: 15vh;
+        height: 15vh;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h2>VnixEdu</h2>
+    </header>
+
+    <main>
+      <div>
+        <div class="lockedLogo">
+          <img alt="lock" src="/images/lock-unlocked-svgrepo-com.svg" />
+        </div>
+        <div class="forms-container">
+          <!-- Tabs -->
+          <div class="tabs">
+            <button id="tab-signin" class="active">LogIn</button>
+            <button id="tab-register">Register</button>
+          </div>
+          <!-- Sign In Form -->
+          <form action="/login" method="post" id="signin-form" class="active">
+            <label for="signin-email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="signin-email"
+              autocomplete="email"
+              placeholder="Enter your email"
+              value="<%= locals.email || '' %>"
+              required
+            />
+
+            <label for="signin-password">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="signin-password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+
+            <p><%= locals.error || '' %></p>
+
+            <button type="submit" class="submit-btn">LogIn</button>
+          </form>
+
+          <!-- Register Form -->
+          <form action="/register" method="post" id="register-form">
+            <label for="register-name" autocomplete="username">Name</label>
+            <input
+              type="text"
+              name="name"
+              id="register-name"
+              placeholder="Enter your name"
+              value="<%= locals.name%>"
+              required
+            />
+
+            <label for="register-email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="register-email"
+              placeholder="Enter your email"
+              autocomplete="email"
+              required
+            />
+
+            <label for="register-password">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="register-password"
+              placeholder="Create a password"
+              autocomplete="new-password"
+              required
+            />
+
+            <label for="confirm-password">Re-enter Password</label>
+            <input
+              type="password"
+              name="cpassword"
+              id="confirm-password"
+              placeholder="Confirm your password"
+              autocomplete="confirm-password"
+              required
+            />
+            <ul id="passwordValid"></ul>
+
+            <button type="submit" id="submitBtn" class="submit-btn">
+              Register
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+    <footer>copyrights</footer>
+    <script>
+      // Tabs
+      const tabSignin = document.getElementById("tab-signin");
+      const tabRegister = document.getElementById("tab-register");
+      const signinForm = document.getElementById("signin-form");
+      const registerForm = document.getElementById("register-form");
+      const passwordValid = document.getElementById("passwordValid");
+      const registerName = document.getElementById("register-name");
+      const registerEmail = document.getElementById("register-email");
+      const registerPassword = document.getElementById("register-password");
+      const confirmPassword = document.getElementById("confirm-password");
+      const submitBtn = document.getElementById("submitBtn");
+
+      // Show Sign In form
+      tabSignin.addEventListener("click", () => {
+        tabSignin.classList.add("active");
+        tabRegister.classList.remove("active");
+        signinForm.classList.add("active");
+        registerForm.classList.remove("active");
+      });
+
+      const switchState = "<%= state %>";
+
+      function LoginSwitcher() {
+        tabRegister.classList.add("active");
+        tabSignin.classList.remove("active");
+        registerForm.classList.add("active");
+        signinForm.classList.remove("active");
+      }
+
+      if (switchState === "register") {
+        LoginSwitcher();
+      }
+
+      // Show Register form
+      tabRegister.addEventListener("click", LoginSwitcher);
+
+      //Password Validation
+      function validatePassword() {
+        const errors = [];
+        passwordValid.innerHTML = "";
+        registerPassword.style.outline = "";
+        confirmPassword.style.outline = "";
+
+        // Check password length
+        if (registerPassword.value.length <= 6) {
+          errors.push("Password must be longer than 6 characters");
+        }
+        if (registerPassword.value.length >= 20) {
+          errors.push("Password must be less than 20 characters");
+        }
+
+        // Check match
+        if (registerPassword.value !== confirmPassword.value) {
+          errors.push("Password and confirm password must be the same");
+        }
+
+        // Outline for visual feedback
+        if (
+          registerPassword.value.length > 6 &&
+          registerPassword.value.length < 20
+        ) {
+          registerPassword.style.outline = "2px solid #4CAF50"; // green if length ok
+        } else {
+          registerPassword.style.outline = "2px solid red"; // red if length invalid
+        }
+
+        if (confirmPassword.value !== "") {
+          confirmPassword.style.outline =
+            registerPassword.value === confirmPassword.value
+              ? "2px solid #4CAF50"
+              : "2px solid red";
+        }
+
+        // Show errors in UL
+        errors.forEach((error) => {
+          const li = document.createElement("li");
+          li.textContent = error;
+          passwordValid.appendChild(li);
+        });
+
+        // Enable button if no errors, else disable
+        submitBtn.disabled = errors.length > 0;
+        if (!submitBtn.disabled) {
+          submitBtn.style.opacity = 1;
+        } else {
+          submitBtn.style.opacity = 0.3;
+        }
+      }
+      // Listen to password and confirm input
+      registerPassword.addEventListener("input", validatePassword);
+      confirmPassword.addEventListener("input", validatePassword);
+
+      // Disable button by default
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = 0.3;
+    </script>
+  </body>
+</html>

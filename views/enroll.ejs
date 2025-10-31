@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enroll Courses</title>
+    <link rel="stylesheet" href="/sitestyles.css" />
+    <style>
+      .addToCart {
+        display: none;
+        /* border: 1px solid red; */
+        flex-direction: column;
+        gap: 10px;
+        margin: 10px;
+        padding: 10px;
+      }
+
+      .addToCart button {
+        border: none;
+        outline: none;
+        width: 100px;
+        padding: 8px 10px;
+        background-color: rgb(0, 88, 0);
+        color: white;
+        border-radius: 16px;
+      }
+
+      .addToCart button:hover {
+        cursor: pointer;
+        background-color: rgb(0, 134, 0);
+      }
+      .EnrollCourse {
+        display: none;
+        /* border: 1px solid red; */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .videoList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>Enroll</h2>
+      <nav>
+        <a href="/home"
+          ><img alt="Home" src="/images/store-svgrepo-com.svg"
+        /></a>
+      </nav>
+    </header>
+
+    <p id="loading">Loading...</p>
+
+    <div class="addToCart" id="addToCart">
+      <h2 id="courseName">Data fetching error</h2>
+      <p id="courseDescription"></p>
+      <p id="coursePrice"></p>
+      <p id="TeacherName"></p>
+      <p id="CourseId" style="display: none"><%= locals.courseId %></p>
+
+      <button class="cartBtn" id="cartBtn">Add to cart</button>
+      <div class="courseContent" id="courseContent"></div>
+    </div>
+    <div class="EnrollCourse" id="EnrollCourse">
+      <h3 id="courseNameEnroll"></h3>
+      <div class="videoList" id="videoList"></div>
+    </div>
+
+    <script>
+      const courseName = document.getElementById("courseName");
+      const courseDescription = document.getElementById("courseDescription");
+      const coursePrice = document.getElementById("coursePrice");
+      const TeacherName = document.getElementById("TeacherName");
+      const videoList = document.getElementById("videoList");
+      const courseContent = document.getElementById("courseContent");
+
+      async function callCourseInfo() {
+        const parthParts = window.location.pathname.split("/");
+        const courseId = parthParts[parthParts.length - 1];
+        const res = await fetch(`/videos/${courseId}`);
+        const courseInfo = await res.json();
+        return courseInfo;
+      }
+
+      async function renderCourseInfo() {
+        let courseinfo = await callCourseInfo();
+        courseinfo = courseinfo.courseInfo;
+        console.log(courseinfo);
+
+        courseName.innerText = courseinfo[0].name;
+        courseDescription.innerText = courseinfo[0].description;
+        coursePrice.innerText = courseinfo[0].price;
+        TeacherName.innerText = courseinfo[0].teacherId.name;
+      }
+
+      const courseId = document.getElementById("CourseId").innerText;
+      document.getElementById("cartBtn").addEventListener("click", async () => {
+        console.log(courseId);
+        try {
+          const response = await fetch("/addtocart", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ courseId }),
+          });
+          const addtocart = await response.json();
+          console.log(addtocart);
+          enrollHandler();
+        } catch (err) {
+          console.log("error", err);
+        }
+      });
+
+      //call cart status by course Id
+      async function cartStatus() {
+        const parthParts = window.location.pathname.split("/");
+        const courseId = parthParts[parthParts.length - 1];
+        const res = await fetch(`/carts/${courseId}`);
+        const cartstatus = await res.json();
+        return cartstatus;
+      }
+
+      //handle enroll sector
+      async function enrollHandler() {
+        const status = await cartStatus();
+        console.log(status);
+        document.getElementById("loading").style.display = "none";
+        if (status == "notavalable") {
+          renderCourseInfo();
+          renderCourseContent();
+          document.getElementById("addToCart").style.display = "flex";
+        } else if (status == "paid") {
+          renderVideos();
+          document.getElementById("EnrollCourse").style.display = "flex";
+        } else if (status == "cart") {
+          const btn = document.getElementById("cartBtn");
+          btn.innerText = "Added to cart";
+          btn.disabled = true;
+          renderCourseInfo();
+          renderCourseContent();
+          document.getElementById("addToCart").style.display = "flex";
+        } else {
+          document.getElementById("loading").style.display = "inline";
+        }
+      }
+
+      enrollHandler();
+
+      //enroll video handle
+
+      async function renderVideos() {
+        const infoList = await callCourseInfo();
+        console.log(infoList);
+        courseInfo = infoList.courseInfo;
+        videos = infoList.videos;
+        console.log(infoList.videos);
+        document.getElementById("courseNameEnroll").innerText =
+          courseInfo[0].name;
+
+        videos.forEach((i) => {
+          const video = document.createElement("div");
+          video.classList.add("video");
+
+          const name = document.createElement("p");
+          name.innerText = i.name;
+          video.appendChild(name);
+
+          const description = document.createElement("p");
+          description.innerText = i.description;
+          video.appendChild(description);
+
+          const orgvideo = document.createElement("video");
+          orgvideo.src = `/uploads/${i.video}`;
+          console.log(`uploads/${i.video}`);
+          orgvideo.controls = true;
+          orgvideo.width = 400;
+
+          video.appendChild(orgvideo);
+
+          videoList.appendChild(video);
+        });
+      }
+
+      //coure content handler
+
+      async function renderCourseContent() {
+        courseContent.innerHTML = "";
+        const infoList = await callCourseInfo();
+        courseInfo = infoList.courseInfo;
+        videos = infoList.videos;
+
+        const cc = document.createElement("p");
+        cc.innerText = "Course Content:";
+        courseContent.appendChild(cc);
+        videos.forEach((i) => {
+          const video = document.createElement("div");
+          video.classList.add("boxListDesign");
+
+          const name = document.createElement("h3");
+          name.innerText = i.name;
+          video.appendChild(name);
+
+          const description = document.createElement("h5");
+          description.innerText = i.description;
+          video.appendChild(description);
+          courseContent.appendChild(video);
+        });
+      }
+    </script>
+  </body>
+</html>
