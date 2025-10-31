@@ -1,0 +1,222 @@
+
+main {
+  background-color: black;
+}
+
+footer {
+  background-color: black;
+  color: white;
+  padding: 50px;
+  text-align: center;
+  border-top: 3px solid white;
+}
+.banner-design {
+  display: flex;
+  flex-direction: column;
+}
+.card-set {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 50px 0px;
+  background-color: black;
+  height: calc(100vh - 47.2px);
+  animation-name: opacity;
+  animation-iteration-count: 12;
+  animation-direction: alternate;
+  animation-duration: 3s;
+}
+.design-card {
+  border: 8px solid rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 30px;
+  width: min-content;
+  height: min-content;
+  box-shadow: 0 10px 15px rgba(255, 255, 255, 0.608);
+  position: absolute;
+}
+@keyframes opacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes left-card {
+  0% {
+  }
+  100% {
+    transform: rotate(-20deg);
+    transform-origin: right bottom;
+    margin-left: -375px;
+  }
+}
+@keyframes right-card {
+  0% {
+  }
+  100% {
+    transform: rotate(20deg);
+    transform-origin: left bottom;
+    margin-right: -375px;
+  }
+}
+
+.design-card:last-child {
+  animation-name: right-card;
+  animation-duration: 3s;
+  animation-timing-function: ease;
+  animation-iteration-count: 6;
+  animation-direction: alternate;
+}
+
+.design-card:first-child {
+  animation-name: left-card;
+  animation-duration: 3s;
+  animation-timing-function: ease;
+  animation-iteration-count: 6;
+  animation-direction: alternate;
+}
+
+.design-card-img {
+  height: 250px;
+  width: 170px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 30px;
+}
+
+/* transform: rotate(-10deg);
+  transform-origin: right bottom; */
+
+.design-text {
+  position: absolute;
+  color: white;
+  width: 100%;
+  height: 300px;
+  margin-top: 10vh;
+  text-align: center;
+}
+.design-text p {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  padding: 20px;
+}
+.banner-signIn {
+  text-decoration: none;
+  padding: 10px 30px;
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  border: none;
+  color: white;
+  border: 3px solid white;
+}
+.banner-signIn:hover {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+.carModel {
+  background-color: white;
+  /* border: 2px solid red; */
+  width: 100%;
+  display: flex;
+}
+.container3d{
+  width: 40%;
+  height: 300px;
+  /* border: 1px solid black; */
+}
+.carmodeldescription{
+  width: 60%;
+  font-size: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+.carmodeldescription h3{
+  text-shadow: 0 0 5px rgb(0, 255, 85), 0 0 10px rgb(0, 255, 85), 0 0 20px rgb(0, 255, 85);
+}
+
+/* teacher.ejs styles */
+.teacher-account{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid blue;
+}
+.teacher-account-details{
+  position: absolute;
+  right: 5px;
+  top: 60px;
+  background-color: red;
+  padding: 20px;
+  display: none;
+}
+.teacher-main{
+  display: flex;
+}
+.courses-slidebar{
+  width: 40%;
+  border-right: 1px solid black;
+  padding: 8px;
+}
+.courses{
+  width: 60%;
+  padding: 8px;
+}
+.create-course-menu{
+  position: absolute;
+  display: none;
+}
+#createCourse, #createvideo{
+  padding: 8px 15px;
+  margin: 10px;
+  background-color: #383838;
+  color: white;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 16px;
+}
+.createCourseForm{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #1f1f1f;
+  padding: 10px;
+  
+}
+.message-box{
+  height: 50px;
+  background-color: green;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  position: absolute;
+  bottom: 10px;
+  left: 40%;
+  padding: 10px;
+}
+.upload-video-menu{
+  display: none;
+  position: absolute;
+  flex-direction: column;
+}
+.upload-video-menu form{
+  display: flex;
+  flex-direction: column;
+  background-color: #1f1f1f;
+  gap: 10px;
+  padding: 10px;
+}

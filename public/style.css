@@ -1,0 +1,31 @@
+.home-courses-list {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.course-card {
+  border: 2px solid black;
+  background-color: #262626;
+  min-width: 300px;
+  padding: 10px;
+  width: calc(100%/4 - 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 5px;
+}
+.course-card img{
+    width: 100%;
+}
+.course-card button{
+    width: 100%;
+    padding: 4px;
+    border-radius: 16px;
+    color: white;
+    /* background-color: transparent; */
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
