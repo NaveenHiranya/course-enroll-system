@@ -1,0 +1,30 @@
+{
+  "name": "course-enroll-system",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000c\u0000o\u0000u\u0000r\u0000s\u0000e\u0000-\u0000e\u0000n\u0000r\u0000o\u0000l\u0000l\u0000-\u0000s\u0000y\u0000s\u0000t\u0000e\u0000m\u0000\r\u0000 \u0000\r\u0000 \u0000T\u0000h\u0000i\u0000s\u0000 \u0000i\u0000s\u0000 \u0000m\u0000y\u0000 \u0000f\u0000i\u0000r\u0000s\u0000t\u0000 \u0000F\u0000u\u0000l\u0000l\u0000 \u0000s\u0000t\u0000a\u0000c\u0000k\u0000 \u0000w\u0000e\u0000b\u0000s\u0000i\u0000t\u0000e\u0000\r\u0000 \u0000",
+  "main": "database.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NaveenHiranya/course-enroll-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NaveenHiranya/course-enroll-system/issues"
+  },
+  "homepage": "https://github.com/NaveenHiranya/course-enroll-system#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "mongoose": "^8.19.2",
+    "multer": "^2.0.2"
+  }
+}
