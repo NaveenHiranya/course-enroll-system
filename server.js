@@ -1,12 +1,12 @@
 import express from "express";
 import session from "express-session";
-import Stripe from "stripe";
+// import Stripe from "stripe";
 import dotenv from 'dotenv';
 import multer from "multer";
 import path from 'path';
 
 dotenv.config();
-const stripe = new Stripe(process.env.STRIPE_SECRET);
+// const stripe = new Stripe(process.env.STRIPE_SECRET);
 const app = express();
 import {
   sign,
